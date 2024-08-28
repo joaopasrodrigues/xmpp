@@ -77,6 +77,18 @@ class Message implements ProtocolImplementationInterface
      */
     protected $message = '';
 
+        /**
+     * Message type.
+     *
+     * @var string
+     */
+    protected $id = "";
+
+
+
+
+
+
     /**
      * Constructor.
      *
@@ -89,19 +101,7 @@ class Message implements ProtocolImplementationInterface
         $this->setMessage($message)->setTo($to)->setType($type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function toString()
-    {
-        return XML::quoteMessage(
-            '<message type="%s" id="%s" to="%s"><body>%s</body></message>',
-            $this->getType(),
-            XML::generateId(),
-            $this->getTo(),
-            $this->getMessage()
-        );
-    }
+
 
     /**
      * Get message type.
@@ -170,4 +170,48 @@ class Message implements ProtocolImplementationInterface
         $this->message = (string) $message;
         return $this;
     }
+
+
+
+     /**
+     * Get message ID
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set message ID.
+     *
+    * @param string $type
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+
+     /**
+     * {@inheritDoc}
+     */
+    public function toString()
+    {
+        $id =  $this->getId();
+        if ($id=="") $id = XML::generateId();
+
+        return XML::quoteMessage(
+            '<message type="%s" id="%s" to="%s"><body>%s</body></message>',
+            $this->getType(),
+            $id,
+            $this->getTo(),
+            $this->getMessage()
+        );
+    }
+}
+
 }
